@@ -165,7 +165,7 @@ submit.MouseButton1Click:Connect(function()
         
         main.Visible = false
         
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/kasumichwan/scripts/refs/heads/main/kasumi-hub.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/mynamewendel-ctrl/Blessed-Hub-X-/refs/heads/main/Plants-Vs-Brainrots.lua"))()
         
     else
         header.Text = msg
