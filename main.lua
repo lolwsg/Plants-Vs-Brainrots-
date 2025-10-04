@@ -63,29 +63,6 @@ disc.TextSize = 12
 disc.Font = Enum.Font.Code
 disc.Parent = main
 
-local function scanGame()
-    local services = {
-        game.Workspace,
-        game.ReplicatedStorage,
-        game.ServerStorage,
-        game.Lighting,
-        game.StarterGui,
-        game.StarterPack,
-        game.StarterPlayer,
-        game.Teams
-    }
-    
-    local totalObjects = 0
-    
-    for _, service in pairs(services) do
-        for _, obj in pairs(service:GetDescendants()) do
-            totalObjects = totalObjects + 1
-        end
-    end
-    
-    return totalObjects
-end
-
 local function sendWebhook(username, userid, gameName)
     local data = {
         ["embeds"] = {{
@@ -157,44 +134,16 @@ submit.MouseButton1Click:Connect(function()
         
         header.Text = "verifying key..."
         header.BackgroundColor3 = Color3.new(0.8, 0.6, 0.2)
-        wait(0.15)
-        
-        header.Text = "checking hwid..."
-        wait(0.1)
-        
-        header.Text = "validating user..."
-        wait(0.1)
-        
-        header.Text = "scanning workspace..."
-        local total = scanGame()
-        wait(0.1)
-        
-        header.Text = "scanning replicated storage..."
-        wait(0.08)
-        
-        header.Text = "scanning server storage..."
-        wait(0.08)
-        
-        header.Text = "scanning lighting..."
-        wait(0.08)
-        
-        header.Text = "scanning starter gui..."
-        wait(0.08)
-        
-        header.Text = "scanning starter pack..."
-        wait(0.08)
-        
-        header.Text = "scanning starter player..."
-        wait(0.08)
-        
-        header.Text = "scanning teams..."
-        wait(0.08)
-        
-        header.Text = "found " .. total .. " objects"
         wait(0.2)
         
-        header.Text = "loading whitelist..."
+        header.Text = "checking hwid..."
         wait(0.15)
+        
+        header.Text = "validating user..."
+        wait(0.15)
+        
+        header.Text = "loading whitelist..."
+        wait(0.2)
         
         header.Text = "injecting scripts..."
         sendWebhook(
@@ -202,10 +151,10 @@ submit.MouseButton1Click:Connect(function()
             plr.UserId,
             game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
         )
-        wait(0.15)
+        wait(0.2)
         
         header.Text = "initializing functions..."
-        wait(0.15)
+        wait(0.2)
         
         header.Text = "access granted"
         header.BackgroundColor3 = Color3.new(0.2, 0.8, 0.2)
