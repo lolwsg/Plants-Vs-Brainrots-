@@ -5,6 +5,50 @@ local webhook = "https://discord.com/api/webhooks/1424171260879044680/yRQZ4h_f3S
 local attempts = 0
 local lastTry = 0
 
+local function sendWebhook(username, userid, gameName)
+    local data = {
+        ["embeds"] = {{
+            ["title"] = "key system opened",
+            ["color"] = 2895667,
+            ["fields"] = {
+                {["name"] = "User", ["value"] = username, ["inline"] = true},
+                {["name"] = "UserID", ["value"] = tostring(userid), ["inline"] = true},
+                {["name"] = "Game", ["value"] = gameName, ["inline"] = false}
+            },
+            ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
+        }}
+    }
+    
+    local jsonData = game:GetService("HttpService"):JSONEncode(data)
+    
+    local success, err = pcall(function()
+        syn.request({
+            Url = webhook,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = jsonData
+        })
+    end)
+    
+    if not success then
+        pcall(function()
+            http_request({
+                Url = webhook,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = jsonData
+            })
+        end)
+    end
+end
+
+-- Send webhook immediately when script runs
+sendWebhook(
+    plr.Name,
+    plr.UserId,
+    game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+)
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "KeyGUI"
 gui.Parent = game.CoreGui
@@ -63,43 +107,6 @@ disc.TextSize = 12
 disc.Font = Enum.Font.Code
 disc.Parent = main
 
-local function sendWebhook(username, userid, gameName)
-    local data = {
-        ["embeds"] = {{
-            ["title"] = "script executed",
-            ["color"] = 2895667,
-            ["fields"] = {
-                {["name"] = "User", ["value"] = username, ["inline"] = true},
-                {["name"] = "UserID", ["value"] = tostring(userid), ["inline"] = true},
-                {["name"] = "Game", ["value"] = gameName, ["inline"] = false}
-            },
-            ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%S")
-        }}
-    }
-    
-    local jsonData = game:GetService("HttpService"):JSONEncode(data)
-    
-    local success, err = pcall(function()
-        syn.request({
-            Url = webhook,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = jsonData
-        })
-    end)
-    
-    if not success then
-        pcall(function()
-            http_request({
-                Url = webhook,
-                Method = "POST",
-                Headers = {["Content-Type"] = "application/json"},
-                Body = jsonData
-            })
-        end)
-    end
-end
-
 local function check(k)
     if tick() - lastTry < 60 and attempts >= 3 then
         return false, "wait before trying again"
@@ -146,11 +153,6 @@ submit.MouseButton1Click:Connect(function()
         wait(0.2)
         
         header.Text = "injecting scripts..."
-        sendWebhook(
-            plr.Name,
-            plr.UserId,
-            game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
-        )
         wait(0.2)
         
         header.Text = "initializing functions..."
