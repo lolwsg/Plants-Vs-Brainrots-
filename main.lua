@@ -18,25 +18,14 @@ local function sendWebhook(username, userid, gameName)
     
     local jsonData = game:GetService("HttpService"):JSONEncode(data)
     
-    local success, err = pcall(function()
-        syn.request({
+    pcall(function()
+        request({
             Url = webhook,
             Method = "POST",
             Headers = {["Content-Type"] = "application/json"},
             Body = jsonData
         })
     end)
-    
-    if not success then
-        pcall(function()
-            http_request({
-                Url = webhook,
-                Method = "POST",
-                Headers = {["Content-Type"] = "application/json"},
-                Body = jsonData
-            })
-        end)
-    end
 end
 
 sendWebhook(
@@ -47,7 +36,7 @@ sendWebhook(
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "WelcomeGUI"
-gui.Parent = game.CoreGui
+gui.Parent = gethui() or game:GetService("CoreGui") or plr:WaitForChild("PlayerGui")
 
 local main = Instance.new("Frame")
 main.Size = UDim2.new(0, 350, 0, 200)
