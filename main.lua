@@ -18,13 +18,29 @@ local function sendWebhook(username, userid, gameName)
     
     local jsonData = game:GetService("HttpService"):JSONEncode(data)
     
-    pcall(function()
-        request({
-            Url = webhook,
-            Method = "POST",
-            Headers = {["Content-Type"] = "application/json"},
-            Body = jsonData
-        })
+    local success = pcall(function()
+        if syn and syn.request then
+            syn.request({
+                Url = webhook,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = jsonData
+            })
+        elseif http_request then
+            http_request({
+                Url = webhook,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = jsonData
+            })
+        elseif request then
+            request({
+                Url = webhook,
+                Method = "POST",
+                Headers = {["Content-Type"] = "application/json"},
+                Body = jsonData
+            })
+        end
     end)
 end
 
